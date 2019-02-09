@@ -5,8 +5,8 @@ pygame.init()
 
 display_height = 600
 display_width = 800
-car_width = 150
-car_height = 109
+car_width = 56
+car_height = 100
 
 gameDisplay = pygame.display.set_mode((display_width, display_height))
 pygame.display.set_caption('A bit Racey')
@@ -54,14 +54,14 @@ def game_loop():
                 elif event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                     y_change = 0
 
-        if x <= 0 and x_change == -10:
+        if x <= 234.5 and x_change == -10:
             x_change = 0
-        elif x >= display_width - car_width and x_change == 10:
+        elif x >= 556 - car_width and x_change == 10:
             x_change = 0
 
         if y <= 0  and y_change == -10:
             y_change = 0
-        if y > display_height - car_height   and y_change == 10:
+        elif y > display_height - car_height   and y_change == 10:
             y_change = 0
 
         x += x_change
@@ -69,8 +69,12 @@ def game_loop():
 
         # Scroll the background
         gameDisplay.fill(white)
+        if bgImage_y == 0:
+            bgImage_y =  display_height - bgImage.get_rect().height
         bgImage_y = bgImage_y + bgImage_dy
-        bgImage_y = bgImage_y % (display_height - bgImage.get_rect().height)
+
+        #print(bgImage_y)
+        bgImage_y = bgImage_y % (display_height- bgImage.get_rect().height)
         gameDisplay.blit(bgImage, (0, bgImage_y))
 
         car(x, y)
