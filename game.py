@@ -10,17 +10,13 @@ car_heigth = 109
 
 gameDisplay = pygame.display.set_mode((display_width, display_height))
 pygame.display.set_caption('A bit Racey')
+
+# load images.
 carImage = pygame.image.load('car.png')
-
-class X_Direction(enum.Enum):
-    STATIC = 0
-    LEFT = 1
-    RIGHT = 2
-
+bgImage = pygame.image.load("road.png")
 
 def car(x, y):
     gameDisplay.blit(carImage, (x, y))
-
 
 def game_loop():
 
@@ -30,11 +26,12 @@ def game_loop():
     y = (display_height * 0.8)
     x_change = 0
 
+    # Background scrolling variables.
+    bgImage_y = display_height - bgImage.get_rect().height
+    bgImage_dy = 10
+
     clock = pygame.time.Clock()
     gameExit = False
-    change_key = False
-    moving_direction = X_Direction.STATIC
-
 
     while not gameExit:
         for event in pygame.event.get():
@@ -44,10 +41,8 @@ def game_loop():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     x_change = -10
-                    change_key = True
                 elif event.key == pygame.K_RIGHT:
                     x_change = 10
-                    change_key = True
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or pygame.K_RIGHT:
                     x_change = 0
@@ -58,7 +53,13 @@ def game_loop():
             x_change = 0
 
         x += x_change
+
+        # Scroll the background
         gameDisplay.fill(white)
+        bgImage_y = bgImage_y + bgImage_dy
+        bgImage_y = bgImage_y % (display_height - bgImage.get_rect().height)
+        gameDisplay.blit(bgImage, (0, bgImage_y))
+        
         car(x, y)
         pygame.display.update()
         clock.tick(60)
