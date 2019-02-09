@@ -13,7 +13,7 @@ pygame.display.set_caption('A bit Racey')
 
 # load images.
 carImage = pygame.image.load('images/car.png')
-bgImage = pygame.image.load('images/road.png')
+bgImage = pygame.image.load("images/road.png")
 
 def car(x, y):
     gameDisplay.blit(carImage, (x, y))
@@ -26,7 +26,6 @@ def game_loop():
     y = (display_height * 0.8)
     x_change = 0
     y_change = 0
-    d_change = 10
 
     # Background scrolling variables.
     bgImage_y = display_height - bgImage.get_rect().height
@@ -42,28 +41,27 @@ def game_loop():
                 gameExit = True
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    x_change = (-d_change)
+                    x_change = -10
                 elif event.key == pygame.K_RIGHT:
-                    x_change = d_change
+                    x_change = 10
                 elif event.key == pygame.K_UP:
-                    y_change = (-d_change)
+                    y_change = -10
                 elif event.key == pygame.K_DOWN:
-                    y_change = d_change
+                    y_change = 10
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                     x_change = 0
-                if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                elif event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                     y_change = 0
-                    
-        
-        if x <= 0 and x_change == -d_change:
+
+        if x <= 0 and x_change == -10:
             x_change = 0
-        elif x >= display_width - car_width and x_change == d_change:
+        elif x >= display_width - car_width and x_change == 10:
             x_change = 0
 
-        if y <= 0 and y_change == -d_change:
+        if y <= 0  and y_change == -10:
             y_change = 0
-        elif y > display_height- car_height and y_change == d_change:
+        if y > display_height - car_height   and y_change == 10:
             y_change = 0
 
         x += x_change
@@ -74,7 +72,7 @@ def game_loop():
         bgImage_y = bgImage_y + bgImage_dy
         bgImage_y = bgImage_y % (display_height - bgImage.get_rect().height)
         gameDisplay.blit(bgImage, (0, bgImage_y))
-        
+
         car(x, y)
         pygame.display.update()
         clock.tick(60)
