@@ -15,6 +15,7 @@ pygame.display.set_caption('A bit Racey')
 
 # load images.
 carImage = pygame.image.load('images/car.png')
+opponentCarImage = pygame.image.load("images/opp.png")
 bgImage = pygame.image.load("images/road.png")
 
 class Player(pygame.sprite.Sprite):
@@ -28,29 +29,30 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = self.x
         self.rect.y = self.y
+        self.boost = 2
 
     def carPosition(self):
         gameDisplay.blit(carImage, (self.x, self.y))
 
     def press(self,key):
         if key == pygame.K_LEFT:
-            self.x_change = -10
+            self.x_change = -self.boost
         elif key == pygame.K_RIGHT:
-            self.x_change = 10
+            self.x_change = self.boost
         elif key == pygame.K_UP:
-            self.y_change = -10
+            self.y_change = -self.boost
         elif key == pygame.K_DOWN:
-            self.y_change = 10
+            self.y_change = self.boost
 
     def update(self):
-        if self.rect.x <= 234.5 and self.x_change == -10:
+        if self.rect.x <= 234.5 and self.x_change == -self.boost:
             self.x_change = 0
-        elif self.rect.x >= 556 - car_width and self.x_change == 10:
+        elif self.rect.x >= 556 - car_width and self.x_change == self.boost:
             self.x_change = 0
 
-        if self.rect.y <= 0  and self.y_change == -10:
+        if self.rect.y <= 0  and self.y_change == -self.boost:
             self.y_change = 0
-        elif self.rect.y > display_height - car_height   and self.y_change == 10:
+        elif self.rect.y > display_height - car_height   and self.y_change == self.boost:
             self.y_change = 0
 
         self.rect.x += self.x_change
@@ -67,7 +69,7 @@ class OpponentCar(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.x = random.choice((300,400,500))
         self.y = (-100)
-        self.image = carImage
+        self.image = opponentCarImage
         #self.frame = 0
         self.rect = self.image.get_rect()
         self.rect.x = self.x
