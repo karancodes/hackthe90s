@@ -133,18 +133,24 @@ def game_loop():
     # Background scrolling variables.
     bgImage_y = display_height - bgImage.get_rect().height
     bgImage_dy = 10
+    odd_dy = 500
 
     clock = pygame.time.Clock()
     gameExit = False
-
+    odds = 60
+    
+    
     opps = pygame.sprite.Group()
-    for i in range(4):
-        opp = OpponentCar()
-        sprites.add(opp)
-        opps.add(opp)
-
     while not gameExit:
-
+        
+        if odds == 0:
+            opp = OpponentCar()
+            sprites.add(opp)
+            opps.add(opp)
+            odds = 60  
+        else:
+            odds-=1 
+        
         collide_opponent = pygame.sprite.spritecollideany(player, opps)
         score.inc_score()
 
@@ -163,9 +169,14 @@ def game_loop():
         
         # Scroll the background
         gameDisplay.fill((255,255,255))
-        if bgImage_y == 0:
-            bgImage_y =  display_height - bgImage.get_rect().height
-        bgImage_y = bgImage_y + bgImage_dy
+        if odd_dy > 0:
+            if bgImage_y == 0:
+                bgImage_y =  display_height - bgImage.get_rect().height
+            bgImage_y = bgImage_y + bgImage_dy
+            odd_dy-=1
+        else:
+            odd_dy = 500  
+            bgImage_dy+=3
 
         #print(bgImage_y)
         bgImage_y = bgImage_y % (display_height- bgImage.get_rect().height)
