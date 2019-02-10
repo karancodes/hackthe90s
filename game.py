@@ -17,6 +17,12 @@ pygame.display.set_caption('A bit Racey')
 carImage = pygame.image.load('images/car.png')
 opponentCarImage = pygame.image.load("images/opp.png")
 bgImage = pygame.image.load("images/road.png")
+start_menu = pygame.image.load('images/start_menu.png') 
+game_over  = pygame.image.load('images/game_over.png') 
+pause_menu = pygame.image.load('images/pause_menu.png')
+
+# load music
+menu_select = pygame.mixer.Sound('sounds/menu_select.wav')
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -81,7 +87,10 @@ class Health(pygame.sprite.Sprite):
 
     def dec_health(self):
         self.health -= 1
-    
+        if self.health == 0:
+            return True
+        return False
+
     def update(self):
         self.image = self.myfont.render('Health: ' + str(self.health), 1, (255,0,0))
 
@@ -118,8 +127,53 @@ class OpponentCar(pygame.sprite.Sprite):
         self.rect.move_ip(0,self.speed)
         #self.frame = self.frame + 1
 
-def game_loop():
+def start_screen(): 
+    pygame.event.clear()
+    gameDisplay.blit(start_menu, (0, 0))
+    pygame.display.update()
+    pygame.mixer.music.load('sounds/excite_music.wav')
+    pygame.mixer.music.play(-1)
 
+    while True:
+        event = pygame.event.wait()
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+            pygame.mixer.music.stop()
+            pygame.mixer.Sound.play(menu_select)
+            game_loop()
+        else:
+            continue
+def gameover(score):
+    pygame.event.clear()
+
+    myfont = pygame.font.SysFont('Comic Sans MS', 100)
+    img= myfont.render("Score "+str(score), 1, (255,0,0))
+    rect = img.get_rect()
+
+    gameDisplay.blit(game_over, (0, 0))
+    gameDisplay.blit(img, (200, 300))
+    pygame.display.update()
+    pygame.mixer.music.load('sounds/excite_music.wav')
+    pygame.mixer.music.play(-1)
+
+    while True:
+        event = pygame.event.wait()
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+            pygame.mixer.music.stop()
+            pygame.mixer.Sound.play(menu_select)
+            game_loop()
+        else:
+            continue
+
+
+def game_loop():
+    pygame.mixer.music.load('sounds/game_music.wav')
+    pygame.mixer.music.play(-1)
     sprites = pygame.sprite.Group()
     player = Player()
     sprites.add(player)
@@ -155,7 +209,9 @@ def game_loop():
         score.inc_score()
 
         if collide_opponent:
-            health.dec_health()
+            killed = health.dec_health()
+            if killed:
+                gameover(score.score)
             player.collision()
 
         for event in pygame.event.get():
@@ -189,6 +245,6 @@ def game_loop():
         pygame.display.update()
         clock.tick(60)
 
-game_loop()
+start_screen()
 pygame.quit()
 quit()
