@@ -1,6 +1,7 @@
 import pygame
 import enum
 import random
+import sys
 
 pygame.init()
 
@@ -141,10 +142,14 @@ def start_screen():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        elif event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-            pygame.mixer.music.stop()
-            pygame.mixer.Sound.play(menu_select)
-            game_loop()
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RETURN:
+                pygame.mixer.music.stop()
+                pygame.mixer.Sound.play(menu_select)
+                game_loop()
+            elif event.key == pygame.K_ESCAPE:
+                pygame.quit()
+                sys.exit()
         else:
             continue
 def gameover(score):
@@ -165,10 +170,14 @@ def gameover(score):
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        elif event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-            pygame.mixer.music.stop()
-            pygame.mixer.Sound.play(menu_select)
-            game_loop()
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RETURN:
+                pygame.mixer.music.stop()
+                pygame.mixer.Sound.play(menu_select)
+                game_loop()
+            elif event.key == pygame.K_ESCAPE:
+                pygame.quit()
+                sys.exit()
         else:
             continue
 
