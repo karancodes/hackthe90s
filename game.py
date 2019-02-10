@@ -149,11 +149,11 @@ def gameover(score):
     pygame.event.clear()
 
     myfont = pygame.font.SysFont('Comic Sans MS', 100)
-    img= myfont.render("Score "+str(score), 1, (255,0,0))
+    img= myfont.render("Score "+str(score), 1, (255,238,41))
     rect = img.get_rect()
 
     gameDisplay.blit(game_over, (0, 0))
-    gameDisplay.blit(img, (200, 300))
+    gameDisplay.blit(img, (230, 300))
     pygame.display.update()
     pygame.mixer.music.load('sounds/excite_music.wav')
     pygame.mixer.music.play(-1)
