@@ -34,6 +34,10 @@ class Player(pygame.sprite.Sprite):
     def carPosition(self):
         gameDisplay.blit(carImage, (self.x, self.y))
 
+    def collision(self):
+        self.x_change = 0
+        self.y_change = 0
+
     def press(self,key):
         if key == pygame.K_LEFT:
             self.x_change = -self.boost
@@ -64,13 +68,46 @@ class Player(pygame.sprite.Sprite):
         elif key == pygame.K_UP or key == pygame.K_DOWN:
             self.y_change =0    
 
+class Health(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.font.init()
+        pygame.sprite.Sprite.__init__(self)
+        self.health = 100
+        self.myfont = pygame.font.SysFont('Comic Sans MS', 30)
+        self.image = self.myfont.render("End Game", 1, (255,0,0))
+        self.rect = self.image.get_rect()
+        self.rect.x = 50
+        self.rect.y = 10
+
+    def dec_health(self):
+        self.health -= 1
+    
+    def update(self):
+        self.image = self.myfont.render('Health: ' + str(self.health), 1, (255,0,0))
+
+class Score(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.font.init()
+        pygame.sprite.Sprite.__init__(self)
+        self.score = 0
+        self.myfont = pygame.font.SysFont('Comic Sans MS', 30)
+        self.image = self.myfont.render("Score: 0", 1, (255,0,0))
+        self.rect = self.image.get_rect()
+        self.rect.x = 650
+        self.rect.y = 10
+
+    def inc_score(self):
+        self.score += 1
+    
+    def update(self):
+        self.image = self.myfont.render('Score: ' + str(self.score), 1, (255,0,0))
+    
 class OpponentCar(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.x = random.choice((300,400,500))
         self.y = (-100)
         self.image = opponentCarImage
-        #self.frame = 0
         self.rect = self.image.get_rect()
         self.rect.x = self.x
         self.rect.y = self.y
@@ -83,10 +120,15 @@ class OpponentCar(pygame.sprite.Sprite):
 
 def game_loop():
 
-    
     sprites = pygame.sprite.Group()
     player = Player()
     sprites.add(player)
+
+    health = Health()
+    sprites.add(health)
+
+    score = Score()
+    sprites.add(score)
 
     # Background scrolling variables.
     bgImage_y = display_height - bgImage.get_rect().height
@@ -102,6 +144,14 @@ def game_loop():
         opps.add(opp)
 
     while not gameExit:
+
+        collide_opponent = pygame.sprite.spritecollideany(player, opps)
+        score.inc_score()
+
+        if collide_opponent:
+            health.dec_health()
+            player.collision()
+
         for event in pygame.event.get():
             # print(event)
             if event.type == pygame.QUIT:
@@ -110,8 +160,6 @@ def game_loop():
                 player.press(event.key)
             if event.type == pygame.KEYUP:
                 player.reset(event.key)
-        
-        
         
         # Scroll the background
         gameDisplay.fill((255,255,255))
