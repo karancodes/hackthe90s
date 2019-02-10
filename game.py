@@ -11,7 +11,7 @@ car_height = 100
 ROAD_RECT = (235,0,563,800)
 
 gameDisplay = pygame.display.set_mode((display_width, display_height))
-pygame.display.set_caption('A bit Racey')
+pygame.display.set_caption('Race The 90s')
 
 # load images.
 carImage = pygame.image.load('images/car.png')
@@ -23,6 +23,7 @@ pause_menu = pygame.image.load('images/pause_menu.png')
 
 # load music
 menu_select = pygame.mixer.Sound('sounds/menu_select.wav')
+collide_sound = pygame.mixer.Sound('sounds/col.wav')
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -41,6 +42,7 @@ class Player(pygame.sprite.Sprite):
         gameDisplay.blit(carImage, (self.x, self.y))
 
     def collision(self):
+        pygame.mixer.Sound.play(collide_sound)
         self.x_change = 0
         self.y_change = 0
 
